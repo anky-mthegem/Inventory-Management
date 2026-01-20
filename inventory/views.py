@@ -28,14 +28,13 @@ def logout_view(request):
     return redirect('login')
 
 def home(request):
-    
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     print("inside home view")
     return render(request, 'matin.html')
 
 def mat_in(request):
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     error_message = None  # Initialize error message
     if request.method == "POST":
@@ -79,7 +78,7 @@ def mat_in(request):
 
 #To display the items in Stock
 def mat_out(request):
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     print("inside display view")
     data= Product_table.objects.filter(Active=True).order_by('-Timestamp')
@@ -88,7 +87,7 @@ def mat_out(request):
 
 # To display the Details on OUT Page
 def out_data(request):
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     PO_no = request.GET.get('PO_no')
     Invoice = request.GET.get('InvoiceNo')
@@ -120,7 +119,7 @@ def out_data(request):
 
 # To adjust the quantity after OUT
 def out_qty(request):
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     if request.method == 'POST':
         PO = request.POST.get('pono')
@@ -160,9 +159,9 @@ def out_qty(request):
     return render(request, 'out.html',{'Og_qty': org_quantity,})
 
 def edit_data(request, InvoiceNo):
-    # Retrieve the record from the database
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
+    # Retrieve the record from the database
     record = Product_table.objects.get(InvoiceNo=InvoiceNo)
     if request.method == 'POST':
         record.PO_no = request.POST['pono']
@@ -184,20 +183,20 @@ def edit_data(request, InvoiceNo):
     return render(request, 'edit.html', {'record': record})
 
 def item_search(request):
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     data= Product_table.objects.filter(Active=True).order_by('-Timestamp')
     return render(request, 'search.html', {'items':data})  
 
 def trans_hist(request):
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     # We use the filter method on the History_table queryset to filter the entries where the Hist_ajdqty field is greater than or equal to 1 (Hist_ajdqty__gte=1).
     data= History_table.objects.filter(Hist_ajdqty__gte=1).order_by('-Timestamp')   
     return render(request, 'history.html', {'item': data})
 
 def generate_qr_code(request):
-    if not request.session.get('user_authenticated'):
+    if request.session.get('user_authenticated') != True:
         return redirect('login')
     if request.method == 'POST':
         print("inside generate QR")

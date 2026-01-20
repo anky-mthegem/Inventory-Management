@@ -127,6 +127,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Session settings
+SESSION_COOKIE_AGE = 600  # Session expires after 10 minutes (600 seconds)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Session expires when browser is closed
+SESSION_SAVE_EVERY_REQUEST = True  # Reset session timer on every request
+
 
 
 
