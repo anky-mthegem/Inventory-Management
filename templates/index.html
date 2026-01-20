@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+
+{% load static %}
+
+{% block extra%}
+<title> Index </title>
+
+<head>
+<link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css"/>
+
+</head>
+
+
+{% endblock extra%}
+
+
+{% block content %}
+
+<body>
+
+    <div id="wrapper">
+      <!-- Sidebar -->
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+  
+          <li class="active">
+            <a href="#"><span class="fa-stack fa-lg pull-left"></span>Godrej Interio</a>
+          </li>
+        
+          <li>
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span> Inventory </a>
+          </li>
+          <li>
+            <a href="rec/"><span class="fa-stack fa-lg pull-left"><i class="fa fa-cloud-download fa-stack-1x "></i></span>Receive Material</a>
+          </li>
+          <li>
+            <a href="rel/"><span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>Material Out</a>
+          </li>
+          <li>
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-wrench fa-stack-1x "></i></span>Logout</a>
+          </li>
+      
+        </ul>
+      </div>
+      <!-- /#sidebar-wrapper -->
+      <!-- Page Content -->
+      <div id="page-content-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12">
+              {% block main_page_content %}
+
+              {% endblock main_page_content %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+
+{% endblock content %}
+
+</body>

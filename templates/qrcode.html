@@ -1,0 +1,168 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extra %}
+<title>Generate QR Code</title>
+{% endblock extra %}
+
+<body>
+{% block content %}
+
+<div class="container mt-4">
+  <div class="page-header">
+    <h1><i class='bx bx-qr'></i> QR Code Generator</h1>
+    <p>Generate QR codes for quick inventory tracking</p>
+  </div>
+
+  <div class="row">
+    <!-- Form Section -->
+    <div class="col-lg-6">
+      <div class="form-section">
+        <h2>Item Details</h2>
+        <form method="post">
+          {% csrf_token %}
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="PO_Number"><i class="fas fa-box"></i> PO Number</label>
+                <input type="text" placeholder="Enter PO Number" name="PO_Number" id="PO_Number" class="form-control">
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Invoice"><i class="fas fa-receipt"></i> Invoice <span class="text-danger">*</span></label>
+                <input type="text" required placeholder="Enter Invoice" name="Invoice" id="Invoice" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="Challan_no"><i class="fas fa-barcode"></i> Challan Number</label>
+            <input type="text" placeholder="Enter Challan No" name="Challan_no" id="Challan_no" class="form-control">
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Itemcode"><i class="fas fa-code"></i> Item Code</label>
+                <input type="text" placeholder="Enter Item Code" name="Itemcode" id="Itemcode" class="form-control">
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Description"><i class="fas fa-align-left"></i> Description <span class="text-danger">*</span></label>
+                <input type="text" required placeholder="Enter Description" name="Description" id="Description" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Quantity"><i class="fas fa-cubes"></i> Quantity <span class="text-danger">*</span></label>
+                <input type="number" required placeholder="Enter Quantity" name="Quantity" id="Quantity" class="form-control">
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Material_Type"><i class="fas fa-tag"></i> Material Type <span class="text-danger">*</span></label>
+                <input type="text" required placeholder="Enter Material Type" name="Material_Type" id="Material_Type" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Ordered_by"><i class="fas fa-user-tie"></i> Ordered By <span class="text-danger">*</span></label>
+                <input type="text" required placeholder="Enter Name" name="Ordered_by" id="Ordered_by" class="form-control">
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Received_by"><i class="fas fa-user-check"></i> Received By <span class="text-danger">*</span></label>
+                <input type="text" required placeholder="Enter Name" name="Received_by" id="Received_by" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Comments"><i class="fas fa-comment"></i> Comments</label>
+                <input type="text" placeholder="Enter Comments" name="Comments" id="Comments" class="form-control">
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Punched_date"><i class="fas fa-calendar"></i> Punched Date <span class="text-danger">*</span></label>
+                <input type="date" required name="Punched_date" id="Punched_date" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-primary">
+              <i class='bx bx-qr'></i> Generate QR Code
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- QR Code Display Section -->
+    <div class="col-lg-6">
+      <div class="form-section">
+        <h2>Generated QR Code</h2>
+        {% if qr_base64 %}
+          <div class="text-center">
+            <img id="qrCodeImage" src="data:image/png;base64,{{ qr_base64 }}" class="img-fluid" alt="QR Code" style="max-width: 300px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div class="action-buttons mt-4">
+              <button class="btn btn-success" onclick="downloadQR()">
+                <i class='bx bx-download'></i> Download QR
+              </button>
+              <button class="btn btn-info" onclick="printQR()">
+                <i class='bx bx-printer'></i> Print QR
+              </button>
+            </div>
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <i class='bx bx-qr' style="font-size: 3rem; color: #cbd5e1;"></i>
+            <p>Fill in the form and click "Generate QR Code" to create a QR code</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function downloadQR() {
+    const img = document.getElementById('qrCodeImage');
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = 'qr_code.png';
+    link.click();
+  }
+
+  function printQR() {
+    const img = document.getElementById('qrCodeImage');
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print QR Code</title></head><body>');
+    printWindow.document.write('<div style="text-align: center; padding: 2rem;">');
+    printWindow.document.write(img.outerHTML);
+    printWindow.document.write('</div></body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  }
+</script>
+
+{% endblock content %}
+</body>

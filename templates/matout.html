@@ -1,0 +1,164 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extra %}
+<title>Items in Stock</title>
+<script rel="stylesheet" src="{% static 'js/matout.js' %}"></script>
+{% endblock extra %}
+
+<body>
+{% block content %}
+
+<div class="container mt-4">
+  <div class="page-header">
+    <h1><i class='bx bx-package'></i> Items in Stock</h1>
+    <p>View and manage all items currently in inventory</p>
+  </div>
+
+  <!-- Search Section -->
+  <div class="form-section">
+    <div class="search-bar">
+      <input type="text" class="form-control" id="searchInput" placeholder="Search by PO, Invoice, Item Code, or Description..." onkeyup="searchTable()">
+      <button type="button" class="btn btn-primary" onclick="searchTable()">
+        <i class='bx bx-search'></i> SEARCH
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-responsive">
+    <table id="itemTable" class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th><i class='bx bx-box'></i> PO Number</th>
+          <th><i class='bx bx-receipt'></i> Invoice</th>
+          <th><i class='bx bx-barcode'></i> Challan No</th>
+          <th><i class='bx bx-code'></i> Item Code</th>
+          <th><i class='bx bx-file'></i> Description</th>
+          <th><i class='bx bx-calculator'></i> Qty</th>
+          <th><i class='bx bx-user'></i> By</th>
+          <th><i class='bx bx-tag'></i> Type</th>
+          <th><i class='bx bx-user-check'></i> Received</th>
+          <th><i class='bx bx-comment'></i> Comments</th>
+          <th><i class='bx bx-calendar'></i> Date</th>
+          <th style="width: 150px;"><i class='bx bx-list'></i> Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in items %}
+        <tr>   
+          <td><strong>{{ product.PO_no }}</strong></td>
+          <td>{{ product.InvoiceNo }}</td>
+          <td>{{ product.ChallanNo }}</td>
+          <td>{{ product.Itemcode }}</td>
+          <td>{{ product.Description }}</td>
+          <td>
+            <span class="badge" style="background-color: #d1fae5; color: #065f46; font-weight: 600;">
+              {{ product.Quantity }}
+            </span>
+          </td>
+          <td>{{ product.Order_by }}</td>
+          <td>{{ product.MatType }}</td>
+          <td>{{ product.Received_by }}</td>
+          <td><small>{{ product.Comments }}</small></td>
+          <td>{{ product.Punched_date }}</td>
+          <td>
+            <form action="{% url 'out_data' %}?PO_no={{ product.PO_no }}&InvoiceNo={{ product.InvoiceNo }}&Description={{ product.Description }}&Quantity={{ product.Quantity }}" method="POST" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger" title="Transfer item out">
+                <i class='bx bx-arrow-back'></i> OUT
+              </button>
+            </form>
+            {% if product.InvoiceNo %}
+            <a href="{% url 'edit' InvoiceNo=product.InvoiceNo %}">
+              <button type="button" class="btn btn-success" title="Edit item details">
+                <i class='bx bx-edit'></i> EDIT
+              </button>
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="12" class="text-center py-4">
+            <div class="empty-state">
+              <i class='bx bx-inbox'></i>
+              <p>No items in stock. Start by receiving new items.</p>
+              <a href="/rec" class="btn btn-primary">
+                <i class='bx bx-plus'></i> Receive Items
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function searchTable() {
+    const input = document.getElementById("searchInput").value.toUpperCase();
+    const table = document.getElementById("itemTable");
+    
+    if (!table) {
+      console.error("Table not found");
+      return;
+    }
+    
+    const tbody = table.querySelector("tbody");
+    if (!tbody) {
+      console.error("Table body not found");
+      return;
+    }
+    
+    const rows = tbody.querySelectorAll("tr");
+    let count = 0;
+    let hasEmptyRow = false;
+
+    rows.forEach(row => {
+      const text = row.textContent || row.innerText;
+      
+      // Check if this is the empty state row
+      if (row.querySelector('.empty-state')) {
+        hasEmptyRow = true;
+        row.style.display = "none";
+        return;
+      }
+      
+      if (text.toUpperCase().indexOf(input) > -1) {
+        row.style.display = "";
+        count++;
+      } else {
+        row.style.display = "none";
+      }
+    });
+    
+    // Show empty state if no results and search term is entered
+    if (count === 0 && input) {
+      const emptyRow = tbody.querySelector("tr:has(.empty-state)");
+      if (emptyRow) {
+        emptyRow.style.display = "";
+      }
+    } else if (count > 0 || !input) {
+      // Hide empty state row if results exist or search is cleared
+      const emptyRow = tbody.querySelector("tr:has(.empty-state)");
+      if (emptyRow) {
+        emptyRow.style.display = "none";
+      }
+    }
+  }
+
+  // Real-time search as user types
+  document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+      searchInput.addEventListener("keyup", searchTable);
+      searchInput.addEventListener("input", searchTable);
+    }
+  });
+</script>
+
+{% endblock content %}
+</body>
+

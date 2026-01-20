@@ -1,0 +1,75 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extra %}
+<title>Transfer Item</title>
+<script rel="stylesheet" src="{% static 'js/matout.js' %}"></script>
+{% endblock extra %}
+
+{% block content %}
+
+<div class="container mt-4">
+  <div class="page-header">
+    <h1><i class='bx bx-up-arrow-alt'></i> Transfer Item Out</h1>
+    <p>Record when materials leave your inventory</p>
+  </div>
+
+  {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+      {{ error_message }}
+    </div>
+  {% else %}
+    <div class="form-section">
+      <h2>Transfer Details</h2>
+      <form action="{% url 'out_qty' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="item"><i class="fas fa-file-invoice"></i> Invoice Number</label>
+              <input type="text" class="form-control" value="{{ InvoiceNo }}" required name="Item" id="item" readonly>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="po"><i class="fas fa-box"></i> PO Number</label>
+              <input type="text" class="form-control" value="{{ PO_no }}" required name="pono" id="po" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="desc"><i class="fas fa-align-left"></i> Description</label>
+          <input type="text" class="form-control" value="{{ Description }}" required name="description" id="desc" readonly>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="qty"><i class="fas fa-cubes"></i> Available Quantity</label>
+              <input type="text" class="form-control" value="{{ Quantity }}" required name="avquantity" id="qty" readonly>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="reqqty"><i class="fas fa-arrow-down"></i> Enter Transfer Quantity</label>
+              <input type="text" class="form-control" required name="quantity" id="reqqty" placeholder="Enter quantity to transfer">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="outuser"><i class="fas fa-user"></i> Transferred By</label>
+          <input type="text" class="form-control" required name="user" id="outuser" placeholder="Enter your name">
+        </div>
+        <div class="action-buttons">
+          <button type="submit" class="btn btn-success">
+            <i class='bx bx-check'></i> Submit Transfer
+          </button>
+          <a href="/rel" class="btn btn-secondary">
+            <i class='bx bx-x'></i> Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock content %}

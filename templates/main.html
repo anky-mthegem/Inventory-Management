@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  {% block extra%}
+
+  {% endblock extra%}
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/boxicons.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/modern.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/qrcode.css' %}">
+  <title>Godrej Interio - Inventory Management</title>
+</head>
+
+<body id="body-pd">
+  {% if not request.path == '/login/' %}
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="header_toggle"> 
+        <i class='bx bx-menu' id="header-toggle"></i> 
+      </div>
+      <div class="header_img"> 
+        <img src="{% static 'imgs/logo.png' %}" alt="Godrej Interio Logo"> 
+      </div>
+    </header>
+    <!-- Sidebar Navigation -->
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div> 
+              <a href="/" class="nav_logo">
+                <i class='bx bx-layer nav_logo-icon'></i>
+                <span class="nav_logo-name">Godrej Interio</span>
+              </a>
+              <div class="nav_list"> 
+                <a href="/rec" class="nav_link"> 
+                  <i class='bx bx-download nav_icon'></i> 
+                  <span class="nav_name">Receive Item</span>
+                </a> 
+                <a href="/rel" class="nav_link">
+                  <i class='bx bx-up-arrow-alt nav_icon'></i> 
+                  <span class="nav_name">Transfer Item</span>
+                </a> 
+                <a href="/search" class="nav_link">
+                  <i class='bx bx-search nav_icon'></i> 
+                  <span class="nav_name">Search</span>
+                </a>  
+                <a href="/qrcode" class="nav_link">
+                  <i class='bx bx-qr nav_icon'></i> 
+                  <span class="nav_name">QR Code</span>
+                </a> 
+                <a href="/hist" class="nav_link">
+                  <i class='bx bx-history nav_icon'></i> 
+                  <span class="nav_name">History</span>
+                </a>
+              </div>
+            </div> 
+        </nav>
+    </div>
+  {% endif %}
+  
+  <!-- Main Content -->
+  <div class="bg-light" style="min-height: 100vh; padding-top: 1rem; padding-bottom: 2rem;">
+    {% block content %}
+    <!-- Default Home Content -->
+    <div class="container">
+      <div class="page-header">
+        <h1>Welcome to Inventory Management System</h1>
+        <p>Efficiently manage and track your inventory in real-time</p>
+      </div>
+      
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-body">
+            <i class="bx bx-download" style="font-size: 2rem; color: #2563eb;"></i>
+            <h5 class="card-title mt-3">Receive Item</h5>
+            <p class="card-text">Add new materials to your inventory with complete details and documentation.</p>
+            <a href="/rec" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Start Receiving</a>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <i class="bx bx-up-arrow-alt" style="font-size: 2rem; color: #10b981;"></i>
+            <h5 class="card-title mt-3">Transfer Item</h5>
+            <p class="card-text">Transfer materials between locations or departments with full audit trail.</p>
+            <a href="/rel" class="btn btn-success" style="width: 100%; margin-top: 1rem;">Transfer Now</a>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <i class="bx bx-search" style="font-size: 2rem; color: #0284c7;"></i>
+            <h5 class="card-title mt-3">Search</h5>
+            <p class="card-text">Quickly find items by location, invoice number, or item code.</p>
+            <a href="/search" class="btn btn-info" style="width: 100%; margin-top: 1rem; background-color: #0284c7; color: white;">Search Items</a>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <i class="bx bx-qr" style="font-size: 2rem; color: #f59e0b;"></i>
+            <h5 class="card-title mt-3">QR Code</h5>
+            <p class="card-text">Generate and scan QR codes for quick item identification and tracking.</p>
+            <a href="/qrcode" class="btn btn-warning" style="width: 100%; margin-top: 1rem; background-color: #f59e0b; color: white;">Generate QR</a>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <i class="bx bx-history" style="font-size: 2rem; color: #8b5cf6;"></i>
+            <h5 class="card-title mt-3">Transaction History</h5>
+            <p class="card-text">View complete history of all inventory transactions and modifications.</p>
+            <a href="/hist" class="btn" style="width: 100%; margin-top: 1rem; background-color: #8b5cf6; color: white;">View History</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endblock content %}
+  </div>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/print.js' %}"></script>
+  <script src="{% static 'js/interactive.js' %}"></script>
+  
+  <script>
+    // Enhanced Sidebar Toggle
+    const toggle = document.getElementById('header-toggle');
+    const nav = document.getElementById('nav-bar');
+    const bodypd = document.getElementById('body-pd');
+    
+    if(toggle) {
+      toggle.addEventListener('click', function() {
+        nav.classList.toggle('show');
+        bodypd.classList.toggle('body-pd');
+      });
+    }
+    
+    // Close sidebar on link click
+    const navLinks = document.querySelectorAll('.nav_link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        if(window.innerWidth < 768) {
+          nav.classList.remove('show');
+          bodypd.classList.remove('body-pd');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
+

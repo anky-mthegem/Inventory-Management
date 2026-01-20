@@ -1,0 +1,116 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extra %}
+<title>Edit Item Details</title>
+<script rel="stylesheet" src="{% static 'js/matout.js' %}"></script>
+{% endblock extra %}
+
+<body>
+{% block content %}
+
+<div class="container mt-4">
+  <div class="page-header">
+    <h1><i class='bx bx-edit'></i> Edit Item Details</h1>
+    <p>Update inventory item information and tracking details</p>
+  </div>
+
+  <div class="form-section">
+    <h2>Item Information</h2>
+    
+    <form method="POST">
+      {% csrf_token %}
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-box"></i> PO Number</label>
+            <input type="text" class="form-control" value="{{ record.PO_no }}" required name="pono">
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-receipt"></i> Invoice Number</label>
+            <input type="text" class="form-control" value="{{ record.InvoiceNo }}" required name="invoice">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-barcode"></i> Challan Number</label>
+        <input type="text" class="form-control" value="{{ record.ChallanNo }}" required name="challanno">
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-align-left"></i> Description</label>
+            <input type="text" class="form-control" value="{{ record.Description }}" required name="desc">
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-code"></i> Item Code</label>
+            <input type="text" class="form-control" value="{{ record.Itemcode }}" required name="item">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-cubes"></i> Available Quantity</label>
+            <input type="text" class="form-control" value="{{ record.Quantity }}" required name="avqty" readonly>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-tag"></i> Material Type</label>
+            <input type="text" class="form-control" value="{{ record.MatType }}" required name="mattype" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-user-tie"></i> Ordered By</label>
+            <input type="text" class="form-control" value="{{ record.Order_by }}" required name="orderby">
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="form-group">
+            <label><i class="fas fa-user-check"></i> Received By</label>
+            <input type="text" class="form-control" value="{{ record.Received_by }}" required name="recby">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-comment"></i> Comments</label>
+        <input type="text" class="form-control" value="{{ record.Comments }}" required name="comment">
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-calendar"></i> Material Punched Date</label>
+        <input type="date" class="form-control" value="{{ record.Punched_date|date:'Y-m-d' }}" required name="punch">
+      </div>
+
+      <div class="action-buttons">
+        <button type="submit" class="btn btn-success">
+          <i class='bx bx-save'></i> Save Changes
+        </button>
+        <a href="/search" class="btn btn-secondary">
+          <i class='bx bx-x'></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}
+</body>

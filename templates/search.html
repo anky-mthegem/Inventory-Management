@@ -1,0 +1,141 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extra %}
+<title>Search Inventory</title>
+{% endblock extra %}
+
+{% block content %}
+
+<div class="container mt-4">
+  <div class="page-header">
+    <h1><i class='bx bx-search'></i> Search Inventory</h1>
+    <p>Find items by location, invoice, or item code</p>
+  </div>
+
+  <!-- Search Section -->
+  <div class="form-section">
+    <div class="search-bar">
+      <input type="text" class="form-control" id="searchInput" placeholder="Search by location, invoice, or item code..." name="search">
+      <button type="button" class="btn btn-primary" onclick="searchTable()">
+        <i class='bx bx-search'></i> SEARCH
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-responsive">
+    {% if items %}
+    <table id="itemTable" class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th><i class='bx bx-map'></i> Location</th> 
+          <th><i class='bx bx-package'></i> PO Number</th>
+          <th><i class='bx bx-receipt'></i> Invoice</th>
+          <th><i class='bx bx-barcode'></i> Item Code</th>
+          <th><i class='bx bx-file'></i> Description</th>
+          <th><i class='bx bx-calculator'></i> Qty</th>
+          <th><i class='bx bx-tag'></i> Type</th>
+          <th><i class='bx bx-user'></i> Purchased By</th>
+          <th><i class='bx bx-user-check'></i> Received By</th>
+          <th><i class='bx bx-time'></i> Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %} 
+        <tr class="search-row">   
+          <td>{{ item.Location }}</td>
+          <td>{{ item.PO_no }}</td>
+          <td>{{ item.InvoiceNo }}</td> 
+          <td>{{ item.Itemcode }}</td>
+          <td>{{ item.Description }}</td>
+          <td><span class="badge" style="background-color: #d1fae5; color: #065f46; font-weight: 600;">{{ item.Quantity }}</span></td>
+          <td>{{ item.MatType }}</td>
+          <td>{{ item.Order_by }}</td>
+          <td>{{ item.Received_by }}</td>
+          <td>{{ item.Punched_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-info">
+      <i class='bx bx-info-circle'></i> No items in inventory yet. Start by <a href="/rec" class="alert-link">receiving items</a>.
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function searchTable() {
+    const input = document.getElementById("searchInput").value.toUpperCase();
+    const table = document.getElementById("itemTable");
+    
+    if (!table) {
+      console.error("Table not found");
+      return;
+    }
+    
+    const rows = table.querySelectorAll("tbody tr.search-row");
+    let count = 0;
+    let visibleCount = 0;
+
+    if (!input) {
+      // Show all rows if search is empty
+      rows.forEach(row => {
+        row.style.display = "";
+        count++;
+      });
+    } else {
+      // Filter rows based on search input
+      rows.forEach(row => {
+        const text = row.textContent || row.innerText;
+        
+        if (text.toUpperCase().indexOf(input) > -1) {
+          row.style.display = "";
+          visibleCount++;
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+    
+    // Show/hide no results message
+    showSearchResults(visibleCount, input);
+  }
+
+  function showSearchResults(count, searchTerm) {
+    let existingMessage = document.getElementById("searchMessage");
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+
+    if (count === 0 && searchTerm) {
+      const table = document.getElementById("itemTable");
+      const tbody = table.querySelector("tbody");
+      const messageRow = document.createElement("tr");
+      messageRow.id = "searchMessage";
+      messageRow.innerHTML = `
+        <td colspan="10" class="text-center py-4">
+          <div class="empty-state">
+            <i class='bx bx-inbox'></i>
+            <p>No items found for "<strong>${searchTerm}</strong>"</p>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(messageRow);
+    }
+  }
+
+  // Real-time search as user types
+  document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+      searchInput.addEventListener("keyup", searchTable);
+      searchInput.addEventListener("input", searchTable);
+      searchInput.focus();
+    }
+  });
+</script>
+
+{% endblock content %}

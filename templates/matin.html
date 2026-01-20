@@ -1,0 +1,86 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extra %}
+<title>Receive Item</title>
+{% endblock extra %}
+
+<body>
+{% block content %}
+
+<div class="container mt-4">
+  <div class="page-header">
+    <h1><i class='bx bx-download'></i> Receive Item</h1>
+    <p>Scan QR codes to record incoming materials</p>
+  </div>
+
+  {% if error_message %}
+    <div class="alert alert-danger">
+      <i class='bx bx-error-circle'></i> {{ error_message }}
+    </div>
+  {% endif %}
+
+  <div class="form-section">
+    <h2>Scan Item QR Code</h2>
+    
+    <form action="{% url 'hdlin' %}" method="POST">
+      {% csrf_token %}
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="itemQR"><i class="fas fa-barcode"></i> Material QR Code <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" required name="ItemQR" id="itemQR" placeholder="Scan material QR code here" autofocus>
+            <small class="text-muted mt-2">Position your scanner and scan the material QR code</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="locQR"><i class="fas fa-map"></i> Location QR Code <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" required name="LocQR" id="locQR" placeholder="Scan location QR code here">
+            <small class="text-muted mt-2">Position your scanner and scan the location QR code</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button type="submit" class="btn btn-success">
+          <i class='bx bx-check'></i> Submit
+        </button>
+        <a href="/" class="btn btn-secondary">
+          <i class='bx bx-x'></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Help Section -->
+  <div class="form-section mt-4">
+    <h3><i class='bx bx-help-circle'></i> How to Use</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><i class='bx bx-barcode'></i> Step 1: Material QR</h5>
+            <p>Scan the QR code from the material label. Make sure the scanner is ready and positioned correctly.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><i class='bx bx-map'></i> Step 2: Location QR</h5>
+            <p>Scan the QR code from the storage location where the material will be stored.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+</body>
+

@@ -1,0 +1,111 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extra %}
+<title>Transaction History</title>
+{% endblock extra %}
+
+<body>
+{% block content %}
+
+<div class="container mt-4">
+  <div class="page-header">
+    <h1><i class='bx bx-history'></i> Transaction History</h1>
+    <p>Complete audit trail of all inventory transactions</p>
+  </div>
+
+  <!-- Search and Export Section -->
+  <div class="form-section">
+    <div class="search-bar">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search by PO, Invoice, or Description..." onkeyup="searchHistoryTable()">
+      <button class="btn btn-primary" onclick="InventoryApp.exportTableToCSV('itemTable', 'inventory_history')">
+        <i class='bx bx-download'></i> Export CSV
+      </button>
+      <button class="btn btn-info" onclick="InventoryApp.printTable('itemTable')" style="background-color: #0ea5e9; color: white;">
+        <i class='bx bx-printer'></i> Print
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-responsive">
+    <table id="itemTable" class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th><i class='bx bx-package'></i> PO Number</th>
+          <th><i class='bx bx-receipt'></i> Invoice</th>
+          <th><i class='bx bx-file'></i> Description</th>
+          <th><i class='bx bx-calculator'></i> Adjusted Qty</th>
+          <th><i class='bx bx-user'></i> Ordered By</th>
+          <th><i class='bx bx-user-check'></i> User</th>
+          <th><i class='bx bx-time'></i> Date & Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in item %}
+        <tr class="history-row">   
+          <td><strong>{{ item.Hist_po }}</strong></td>
+          <td>{{ item.Hist_invoice }}</td> 
+          <td>{{ item.Hist_description }}</td>
+          <td>
+            <span class="badge" style="background-color: #d1fae5; color: #065f46; font-weight: 600;">
+              {{ item.Hist_ajdqty }}
+            </span>
+          </td>
+          <td>{{ item.Order_by }}</td>
+          <td>{{ item.User }}</td>
+          <td>{{ item.Timestamp|date:"D d M Y H:i:s" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center py-4">
+            <div class="empty-state">
+              <i class='bx bx-inbox'></i>
+              <p>No transaction history found</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Statistics Card -->
+  {% if item %}
+  <div class="card-grid mt-4">
+    <div class="card">
+      <div class="card-body">
+        <i class='bx bx-package' style="font-size: 2rem; color: #2563eb;"></i>
+        <h5 class="card-title mt-3">Total Transactions</h5>
+        <p class="card-text" style="font-size: 1.5rem; color: #2563eb; font-weight: bold;">
+          {{ item|length }}
+        </p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function searchHistoryTable() {
+    const input = document.getElementById("searchInput").value.toUpperCase();
+    const table = document.getElementById("itemTable");
+    const rows = table.querySelectorAll("tbody tr.history-row");
+
+    rows.forEach(row => {
+      const text = row.textContent || row.innerText;
+      if (text.toUpperCase().indexOf(input) > -1) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+
+  // Enable real-time search
+  document.getElementById("searchInput")?.addEventListener("keyup", searchHistoryTable);
+</script>
+
+{% endblock content %}
+</body>
+
